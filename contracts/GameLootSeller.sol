@@ -121,10 +121,6 @@ contract GameLootSeller is Ownable {
         maxSupply = maxSupply_;
     }
 
-    function setTimeLocker(address timeLocker_) public onlyTimelocker {
-        timeLocker = timeLocker_;
-    }
-
     modifier onlyTimelocker() {
         require(msg.sender == timeLocker, "is not timelocker");
         _;
