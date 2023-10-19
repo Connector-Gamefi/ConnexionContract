@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-contract GameERC20Treasure is Ownable, Pausable {
+contract GameERC20TreasureSender is Ownable, Pausable {
     using SafeERC20 for IERC20;
 
     mapping(address => bool) public signers;
@@ -20,7 +20,6 @@ contract GameERC20Treasure is Ownable, Pausable {
     address public timeLocker;
 
     event UpChain(address indexed sender, uint256 amount, uint256 nonce);
-    event TopUp(address indexed sender, uint256 amount, uint256 nonce);
 
     constructor(address[] memory _signers, address _token, address _controller, address _timeLocker){
         controller = _controller;
@@ -42,16 +41,6 @@ contract GameERC20Treasure is Ownable, Pausable {
 
         IERC20(token).safeTransfer(msg.sender, _amount);
         emit UpChain(msg.sender, _amount, _nonce);
-    }
-
-    function topUp(
-        uint256 _amount,
-        uint256 _nonce
-    ) public nonceNotUsed(_nonce) whenNotPaused {
-        usedNonce[_nonce] = true;
-
-        IERC20(token).safeTransferFrom(msg.sender, address(this), _amount);
-        emit TopUp(msg.sender, _amount, _nonce);
     }
 
     function verify(
